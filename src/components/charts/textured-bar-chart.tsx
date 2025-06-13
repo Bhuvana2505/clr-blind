@@ -1,8 +1,9 @@
+
 "use client";
 
-import { Bar, BarChart as RechartsBarChart, CartesianGrid, XAxis, YAxis, Tooltip as RechartsTooltip, Legend as RechartsLegend, ResponsiveContainer } from 'recharts';
+import { Bar, BarChart as RechartsBarChart, CartesianGrid, XAxis, YAxis, Tooltip as RechartsTooltip, Legend as RechartsLegend } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChartTooltipContent, type ChartConfig } from '@/components/ui/chart'; // Re-using shadcn's tooltip
+import { ChartContainer, ChartTooltipContent, type ChartConfig } from '@/components/ui/chart';
 import { useColorMode } from '@/contexts/color-mode-context';
 import type { PaletteColor } from '@/lib/palettes';
 
@@ -41,41 +42,39 @@ const TexturedBarChart = () => {
         <CardDescription>Desktop vs. Mobile users from Jan to Jun</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="h-[300px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <RechartsBarChart data={chartData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis dataKey="month" tickLine={false} axisLine={false} stroke="hsl(var(--foreground))" fontSize={12} />
-              <YAxis tickLine={false} axisLine={false} stroke="hsl(var(--foreground))" fontSize={12} />
-              <RechartsTooltip
-                cursor={{ fill: 'hsl(var(--muted))', opacity: 0.5 }}
-                content={<ChartTooltipContent />} 
-              />
-              <RechartsLegend content={({ payload }) => {
-                if (!payload) return null;
-                return (
-                  <ul className="flex justify-center gap-4 pt-4">
-                    {payload.map((entry, index) => (
-                      <li key={`item-${index}`} className="flex items-center gap-2 text-sm">
-                        <span 
-                          className="h-3 w-3 rounded-full" 
-                          style={{ 
-                            backgroundColor: useTextures ? undefined : entry.color,
-                            backgroundImage: useTextures && entry.color?.startsWith('url') ? entry.color : undefined,
-                            border: useTextures && entry.color?.startsWith('url') ? '1px solid hsl(var(--foreground))' : undefined,
-                           }}
-                        />
-                        {entry.value}
-                      </li>
-                    ))}
-                  </ul>
-                );
-              }} />
-              <Bar dataKey="desktop" fill={chartConfig.desktop.color} radius={[4, 4, 0, 0]} />
-              <Bar dataKey="mobile" fill={chartConfig.mobile.color} radius={[4, 4, 0, 0]} />
-            </RechartsBarChart>
-          </ResponsiveContainer>
-        </div>
+        <ChartContainer config={chartConfig} className="h-[300px] w-full">
+          <RechartsBarChart data={chartData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+            <XAxis dataKey="month" tickLine={false} axisLine={false} stroke="hsl(var(--foreground))" fontSize={12} />
+            <YAxis tickLine={false} axisLine={false} stroke="hsl(var(--foreground))" fontSize={12} />
+            <RechartsTooltip
+              cursor={{ fill: 'hsl(var(--muted))', opacity: 0.5 }}
+              content={<ChartTooltipContent />} 
+            />
+            <RechartsLegend content={({ payload }) => {
+              if (!payload) return null;
+              return (
+                <ul className="flex justify-center gap-4 pt-4">
+                  {payload.map((entry, index) => (
+                    <li key={`item-${index}`} className="flex items-center gap-2 text-sm">
+                      <span 
+                        className="h-3 w-3 rounded-full" 
+                        style={{ 
+                          backgroundColor: useTextures ? undefined : entry.color,
+                          backgroundImage: useTextures && entry.color?.startsWith('url') ? entry.color : undefined,
+                          border: useTextures && entry.color?.startsWith('url') ? '1px solid hsl(var(--foreground))' : undefined,
+                         }}
+                      />
+                      {entry.value}
+                    </li>
+                  ))}
+                </ul>
+              );
+            }} />
+            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="mobile" fill="var(--color-mobile)" radius={[4, 4, 0, 0]} />
+          </RechartsBarChart>
+        </ChartContainer>
       </CardContent>
     </Card>
   );
