@@ -22,8 +22,7 @@ Tech Stack
 - Framework: Next.js
 - Language: TypeScript
 - UI Library: React
-- Component Library: ShadCN UI
 - Styling: Tailwind CSS
 - Charts: Recharts
-- AI Integration (Future): Genkit
+
   
